@@ -1,10 +1,40 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<title>四則演算と漢字表記変換</title>
+    <meta charset="utf-8">
+    <!-- viewportはHTMLが表示される領域を指す-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/script.js" defer></script>
+    <title>四則演算と漢字表記変換</title>
 </head>
 <body>
-    <h1>四則演算と漢字表記変換</h1>
+    <div class="container">
+        <h1>四則演算と漢字表記変換</h1>
+        <form id="calculator">
+            <div>
+                <label for="number1">数値1:</label>
+                <input type="number" id="number1" required>
+            </div>
+            <div>
+                <label for="number2">数値2:</label>
+                <input type="number" id="number2" required>
+            </div>
+            <div>
+                <label for="operator">演算子:</label>
+                <select id="operator" required>
+                    <option value="+">+</option>
+                    <option value="-">-</option>
+                    <option value="*">*</option>
+                    <option value="/">/option>
+                </select>
+            </div>
+            <button type="submit">計算する</button>
+        </form>
+        <div class="result">
+            <h2>結果: <span id="result"></span></h2>
+            <h2>漢字表記: <span id="kanjiResult"></span></h2>
+        </div>
+    </div>
 </body>
 </html>
