@@ -1,20 +1,27 @@
 $(document).ready(function() {
     function convertNumberToKanji(number) {
-        const kanjiNumbers = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
-        const kanjiUnits = ["", "十", "百", "千", "万", "億", "兆"];
+        if (number === 0) return "0";
 
-        if (number === 0) return kanjiNumbers[0];
-
+        const kanjiUnits = ["", "万", "億", "兆"];
         let result = "";
-        let unitIndex = 0;
+        let numberString = number.toString();
+        let numberInt = 0; 
+        let numberUnit = 0;
 
-        while (number > 0) {
-            const digit = number % 10;
-            if (digit !== 0) {
-                result = kanjiNumbers[digit] + kanjiUnits[unitIndex] + result;
+        while (numberString != "") {
+            if (numberString.length >= 4){
+                let lastFourCharacters = numberString.substr(-4); 
+                numberString = numberString.slice(0, -4);
+                numberInt = parseInt(lastFourCharacters);
+            }else {
+                numberInt = parseInt(numberString);
+                numberString = "";
             }
-            number = Math.floor(number / 10);
-            unitIndex++;
+            //0だけのとき
+            if (numberInt != 0){
+                result = numberInt.toString() + kanjiUnits[numberUnit] + result
+            }
+            numberUnit += 1
         }
 
         return result;
