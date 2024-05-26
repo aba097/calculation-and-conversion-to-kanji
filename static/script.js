@@ -1,12 +1,35 @@
 $(document).ready(function() {
     function convertNumberToKanji(number) {
-        if (number === 0) return "0";
 
         const kanjiUnits = ["", "万", "億", "兆"];
         let result = "";
-        let numberString = number.toString();
         let numberInt = 0; 
         let numberUnit = 0;
+        let isMinus = false;
+
+        //小数点の処理
+        numberFloat = parseFloat(number) - parseInt(number)
+        if(numberFloat < 0){
+            //-が入っているからslice3する
+            numberFloatString = numberFloat.toFixed(2).toString().slice(3)
+        }else{
+            numberFloatString = numberFloat.toFixed(2).toString().slice(2)
+        }
+    
+        number = parseInt(number)
+        if (number === 0 && numberFloatString === "00") return "0";
+
+
+
+        if (numberFloatString != "00"){
+            result = "." + numberFloatString
+        }
+        //マイナスは最後につける
+        if (number < 0) {
+            number = number * -1
+            isMinus = true
+        }
+        let numberString = number.toString();
 
         while (numberString != "") {
             if (numberString.length >= 4){
@@ -22,6 +45,10 @@ $(document).ready(function() {
                 result = numberInt.toString() + kanjiUnits[numberUnit] + result
             }
             numberUnit += 1
+        }
+
+        if (isMinus) {
+            result = "-" + result
         }
 
         return result;
@@ -57,7 +84,7 @@ $(document).ready(function() {
             $('#kanjiResult').text("無効な計算");
         } else {
             $('#result').text(result);
-            $('#kanjiResult').text(convertNumberToKanji(Math.round(result)));
+            $('#kanjiResult').text(convertNumberToKanji(result));
         }
     });
 });
