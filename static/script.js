@@ -1,35 +1,33 @@
 $(document).ready(function() {
     function convertNumberToKanji(number) {
 
+        if (number.eq(0)) return "0";
+
         const kanjiUnits = ["", "万", "億", "兆"];
         let result = "";
+        let numberFloatString = "";
+        let numberString = "";
         let numberInt = 0; 
         let numberUnit = 0;
         let isMinus = false;
 
-        //小数点の処理
-        numberFloat = parseFloat(number) - parseInt(number)
-        if(numberFloat < 0){
-            //-が入っているからslice3する
-            numberFloatString = numberFloat.toFixed(2).toString().slice(3)
-        }else{
-            numberFloatString = numberFloat.toFixed(2).toString().slice(2)
-        }
-    
-        number = parseInt(number)
-        if (number === 0 && numberFloatString === "00") return "0";
-
-
-
-        if (numberFloatString != "00"){
-            result = "." + numberFloatString
-        }
+        //マイナスの処理
         //マイナスは最後につける
-        if (number < 0) {
-            number = number * -1
-            isMinus = true
+        if (number.lt(0)){
+            number = number.mul(-1);
+            isMinus = true;
         }
-        let numberString = number.toString();
+        
+        //小数点の処理
+        let numberFloat = number.sub(number.floor());
+        if (!numberFloat.eq(0)) { //少数の場合 equal0でない
+            numberFloatString = "." + numberFloat.toFixed(2).toString().slice(2)
+        }
+        result = numberFloatString;
+        
+        //整数部の処理
+        number = number.floor() //切り捨て
+        numberString = number.toString();
 
         while (numberString != "") {
             if (numberString.length >= 4){
@@ -40,7 +38,7 @@ $(document).ready(function() {
                 numberInt = parseInt(numberString);
                 numberString = "";
             }
-            //0だけのとき
+            //0だけのときは万億兆を表示させない
             if (numberInt != 0){
                 result = numberInt.toString() + kanjiUnits[numberUnit] + result
             }
@@ -57,34 +55,40 @@ $(document).ready(function() {
     $('#calculator').submit(function(event) {
         event.preventDefault();
 
-        const number1 = parseFloat($('#number1').val());
-        const number2 = parseFloat($('#number2').val());
+        const input1 = $('#number1').val();
+        const input2 = $('#number2').val();
+
+        //数値が入力されたか確認
+        if (isNaN(input1) || isNaN(input2)) {
+            $('#result').text("無効な計算");
+            $('#kanjiResult').text("無効な計算");
+            return;
+        }
+
+        const number1 = new Decimal(input1);
+        const number2 = new Decimal(input2);
         const operator = $('#operator').val();
         let result;
 
         switch (operator) {
             case '+':
-                result = number1 + number2;
+                result = number1.add(number2);
                 break;
             case '-':
-                result = number1 - number2;
+                result = number1.sub(number2);
                 break;
             case '*':
-                result = number1 * number2;
+                result = number1.mul(number2);
                 break;
             case '/':
-                result = number1 / number2;
+                result = number1.div(number2);
                 break;
             default:
                 result = NaN;
         }
 
-        if (isNaN(result)) {
-            $('#result').text("無効な計算");
-            $('#kanjiResult').text("無効な計算");
-        } else {
-            $('#result').text(result);
-            $('#kanjiResult').text(convertNumberToKanji(result));
-        }
+        $('#result').text(result.toString());
+        $('#kanjiResult').text(convertNumberToKanji(result));
+        
     });
 });

@@ -5,6 +5,7 @@
     <!-- viewportはHTMLが表示される領域を指す-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/10.4.3/decimal.min.js"></script>
     <script src="/static/script.js" defer></script>
     <title>四則演算と漢字表記変換</title>
 </head>
@@ -14,11 +15,11 @@
         <form id="calculator">
             <div>
                 <label for="number1">数値1:</label>
-                <input type="number" id="number1" required step="any">
+                <input type="text" id="number1" required step="any">
             </div>
             <div>
                 <label for="number2">数値2:</label>
-                <input type="number" id="number2" required step="any">
+                <input type="text" id="number2" required step="any">
             </div>
             <div>
                 <label for="operator">演算子:</label>
