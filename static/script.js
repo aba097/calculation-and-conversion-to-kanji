@@ -55,40 +55,97 @@ $(document).ready(function() {
     $('#calculator').submit(function(event) {
         event.preventDefault();
 
-        const input1 = $('#number1').val();
-        const input2 = $('#number2').val();
+        //parseする
+        //replaceで文字列内の空白を全削除
+        const formula = $('#formula').val().replace(/\s+/g, '');
 
-        //数値が入力されたか確認
-        if (isNaN(input1) || isNaN(input2)) {
+        let numList = [];
+        let operators = []; 
+
+        let flg = false;
+        let startIdx = 0;
+        let NaNFlg = false;
+        for (let i = 0; i < formula.length; i++) {
+            if((formula[i] >= '0' && formula[i] <= '9') || formula[i] == '.'){
+                if(!flg){
+                    flg = true;
+                    startIdx = i;
+                }
+            }else {
+                //数値チェック
+                if(flg){
+                    //数値に変換できなかったらアウト,1発目がoperatorでもここでアウトになる
+                    let num = formula.slice(startIdx, i);
+                    if(!isNaN(num)){
+                        numList.push(num);
+                    }else{
+                        NaNFlg = true;
+                        flg = false;
+                        break;
+                    }
+                    flg = false;                    
+                }
+
+                //operatorの場合
+                if(formula[i] == '+' || formula[i] == '-' || formula[i] == '*' || formula == '/' || formula[i] == 'x'){
+                    operators.push(formula[i]);
+                }else{
+                    NaNFlg = true;
+                    flg = false;
+                    break;
+                }
+            }
+        }
+        //最後の数値チェック
+        if(flg){
+            //数値に変換できなかったらアウト
+            let num = formula.slice(startIdx, formula.length);
+            if(!isNaN(num)){
+                numList.push(num);
+            }else{
+                NaNFlg = true;
+            }
+        }
+        //numlist - 1 == operatorsが正しい
+        if (numList.length -1 != operators.length){
+            NaNFlg = true;
+        }
+
+        //入力が正しくない        
+        if (NaNFlg) {
             $('#result').text("無効な計算");
             $('#kanjiResult').text("無効な計算");
             return;
         }
 
-        const number1 = new Decimal(input1);
-        const number2 = new Decimal(input2);
-        const operator = $('#operator').val();
-        let result;
-
-        switch (operator) {
-            case '+':
-                result = number1.add(number2);
-                break;
-            case '-':
-                result = number1.sub(number2);
-                break;
-            case '*':
-                result = number1.mul(number2);
-                break;
-            case '/':
-                result = number1.div(number2);
-                break;
-            default:
-                result = NaN;
+        //計算
+        let num1 = new Decimal(numList.shift());
+        while(numList.length > 0) {
+            let num2 = new Decimal(numList.shift());
+            let operator = operators.shift();
+            switch (operator) {
+                case '+':
+                    num1 = num1.add(num2);
+                    break;
+                case '-':
+                    num1 = num1.sub(num2);
+                    break;
+                case '*':
+                    num1 = num1.mul(num2);
+                    break;
+                case 'x':
+                    num1 = num1.mul(num2);
+                    break;
+                case '/':
+                    num1 = num1.div(num2);
+                    break;
+                default:
+                    num1 = NaN;
+            }
         }
-
-        $('#result').text(result.toString());
-        $('#kanjiResult').text(convertNumberToKanji(result));
+        
+        $('#result').text(num1.toString());
+        $('#kanjiResult').text(convertNumberToKanji(num1));
         
     });
 });
