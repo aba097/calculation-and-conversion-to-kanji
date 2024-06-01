@@ -143,7 +143,14 @@ $(document).ready(function() {
                     num1 = NaN;
             }
         }
-        
+
+        //1京以上の値  
+        if (parseInt(num1.toString()) >= 10000000000000000) {
+            $('#result').text("無効な計算");
+            $('#kanjiResult').text("無効な計算");
+            return;
+        }
+
         $('#result').text(num1.toString());
         $('#kanjiResult').text(convertNumberToKanji(num1));
         
