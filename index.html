@@ -12,12 +12,14 @@
 <body>
     <div class="container">
         <h1>四則演算と漢字単位表記</h1>
-        <p class="description">
-            入力された計算式の計算結果を漢字単位入りに変換します。<br>
-            入力は計算式または数値1つです。<br>
-            計算式は&lt;数値&gt;&lt;演算子&gt;&lt;数値&gt;&lt;演算子&gt;&lt;数値&gt;のようにも入力できます。
-            演算子は (+, -, *, x, /) 、単位は兆まで対応しています。
-        </p>
+        <label id="toggle-description">説明文</label>
+        <ul id="description" class="description">
+            <li>入力された計算式の計算結果を漢字単位入りに変換します。</li>
+            <li>入力は計算式または数値1つです。</li>
+            <li>計算式は&lt;数値&gt;&lt;演算子&gt;&lt;数値&gt;&lt;演算子&gt;&lt;数値&gt;のようにも入力できます。</li>
+            <li>演算子は (+, -, *, x, /) 、単位は兆まで対応しています。</li>
+        </ul>
+        <hr>
         <form id="calculator">
             <div>
                 <input type="text" id="formula" required step="any" placeholder="計算式や数値を入力">

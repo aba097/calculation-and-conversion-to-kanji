@@ -1,4 +1,8 @@
 $(document).ready(function() {
+    $('#toggle-description').click(function() {
+        $('#description').slideToggle();
+    });
+
     function convertNumberToKanji(number) {
 
         if (number.eq(0)) return "0";
